@@ -9,7 +9,7 @@ backend/.env
 frontend/.env.local
 backend/uploads/*
 !backend/uploads/.gitkeep
-!backend/uploads/images/
+backend/uploads/images/*
 !backend/uploads/images/.gitkeep
 .DS_Store
 *.log
