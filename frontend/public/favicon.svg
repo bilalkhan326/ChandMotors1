@@ -1,0 +1,10 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="16" fill="#000000"/>
+  <path d="M13 31.5C13 24.0442 19.0442 18 26.5 18H37.5C44.9558 18 51 24.0442 51 31.5C51 38.9558 44.9558 45 37.5 45H26.5C19.0442 45 13 38.9558 13 31.5Z" fill="#C41E3A" fill-opacity="0.14"/>
+  <path d="M19 29.5C19 26.4624 21.4624 24 24.5 24H39.5C42.5376 24 45 26.4624 45 29.5C45 32.5376 42.5376 35 39.5 35H24.5C21.4624 35 19 32.5376 19 29.5Z" stroke="#FF3A52" stroke-width="1.6"/>
+  <path d="M22.5 28.5H41.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+  <path d="M21 39.5C21 38.6716 21.6716 38 22.5 38C23.3284 38 24 38.6716 24 39.5C24 40.3284 23.3284 41 22.5 41C21.6716 41 21 40.3284 21 39.5Z" fill="#FFFFFF"/>
+  <path d="M40 39.5C40 38.6716 40.6716 38 41.5 38C42.3284 38 43 38.6716 43 39.5C43 40.3284 42.3284 41 41.5 41C40.6716 41 40 40.3284 40 39.5Z" fill="#FFFFFF"/>
+  <path d="M25 20.5C27.5 18.5 31 17.5 32 17.5C33 17.5 36.5 18.5 39 20.5" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/>
+  <text x="32" y="54" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="7" font-weight="700" fill="#FFFFFF">CM</text>
+</svg>

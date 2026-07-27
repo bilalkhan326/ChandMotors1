@@ -1,0 +1,207 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+html {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#root, #root > div {
+  width: 100%;
+  min-width: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #000000;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+  width: 100%;
+  min-height: 100vh;
+}
+
+:root {
+  --primary: #c41e3a; /* single primary color */
+  --primary-contrast: #ff3a52;
+  --glass-alpha: 0.06;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-contrast);
+} 
+
+/* Utility classes */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-contrast) 50%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px rgba(196, 30, 58, 0.25);
+  filter: drop-shadow(0 0 8px rgba(196, 30, 58, 0.15));
+} 
+
+/* Headings use primary color */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary) !important;
+} 
+
+.glass-effect {
+  background: rgba(196, 30, 58, var(--glass-alpha));
+  /* Reduce heavy backdrop blur which can make images appear blurred behind the glass */
+  backdrop-filter: blur(0px);
+  border: 1px solid rgba(196, 30, 58, 0.12);
+}
+
+/* Ensure images render crisply when scaled */
+img {
+  image-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 25px 50px rgba(196, 30, 58, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.btn-primary {
+  padding: 0.75rem 2rem;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-contrast) 100%);
+  color: #fff;
+  font-weight: 900;
+  border-radius: 0.5rem;
+  transition: all 0.25s ease;
+  border: 2px solid rgba(255,255,255,0.04);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 20px 40px rgba(196,30,58,0.25);
+  transform: translateY(-4px) scale(1.02);
+}
+
+.btn-secondary {
+  padding: 0.75rem 2rem;
+  border: 2px solid var(--primary);
+  color: var(--primary-contrast);
+  font-weight: 900;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  background: rgba(0,0,0,0.28);
+}
+
+.btn-secondary:hover {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(196,30,58,0.15);
+}
+
+.text-primary { color: var(--primary) !important; }
+.bg-primary { background: var(--primary) !important; }
+.border-primary { border-color: var(--primary) !important; }
+.text-primary-contrast { color: var(--primary-contrast) !important; }
+
+.section-title {
+  @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center mb-4 gradient-text;
+}
+
+.section-subtitle {
+  @apply text-base sm:text-lg md:text-xl text-gray-300 text-center mb-12 font-semibold;
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Fade and slide animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.slide-in-up {
+  animation: slideInUp 0.6s ease-out;
+}
+
+@media (max-width: 640px) {
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .glass-effect {
+    backdrop-filter: none;
+  }
+}
