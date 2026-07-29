@@ -18,7 +18,7 @@ export const getSettings = async (req, res) => {
     sendSuccess(res, { settings }, 'Settings fetched')
   } catch (error) {
     console.error('Get settings error:', error)
-    if (isDatabaseUnavailableError(error)) {
+    if (isDatabaseUnavailableError(error) || error?.message?.includes('buffering timed out')) {
       return sendSuccess(res, { settings: {} }, 'Settings fetched')
     }
     sendError(res, error.message, 500)
