@@ -4,6 +4,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
 import path from 'path'
+import serverless from 'serverless-http'
 import logger from './utils/logger.js'
 
 // Initialize express app
@@ -45,7 +46,7 @@ dotenv.config({ path: path.join(__dirname, '.env') })
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // MongoDB Connection helper
-const connectDatabase = async () => {
+export const connectDatabase = async () => {
   const atlasUri = process.env.MONGODB_URI
   const localUri = process.env.FALLBACK_MONGODB_URI || 'mongodb://127.0.0.1:27017/chand-motors'
 
@@ -130,8 +131,18 @@ app.use((err, req, res, next) => {
 // Start server after DB connection
 const PORT = process.env.PORT || 5000
 
-const startServer = async () => {
-  await connectDatabase()
+let dbConnectionPromise = null
+
+export const ensureDatabaseConnection = async () => {
+  if (!dbConnectionPromise) {
+    dbConnectionPromise = connectDatabase()
+  }
+
+  await dbConnectionPromise
+}
+
+export const startServer = async () => {
+  await ensureDatabaseConnection()
 
   app.listen(PORT, () => {
     logger.info('Server started', {
@@ -143,6 +154,13 @@ const startServer = async () => {
   })
 }
 
-startServer()
+if (!process.env.VERCEL && process.env.NODE_ENV !== 'test') {
+  startServer()
+}
 
-export default app
+const serverlessHandler = serverless(app)
+
+export default async function handler(req, res) {
+  await ensureDatabaseConnection()
+  return serverlessHandler(req, res)
+}
