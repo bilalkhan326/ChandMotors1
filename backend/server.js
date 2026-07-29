@@ -64,6 +64,11 @@ export const connectDatabase = async () => {
   const atlasUri = process.env.MONGODB_URI
   const localUri = process.env.FALLBACK_MONGODB_URI || 'mongodb://127.0.0.1:27017/chand-motors'
 
+  if (atlasUri && atlasUri.includes('<username>')) {
+    logger.warn('MongoDB URI is still placeholder-only, skipping database connection for this deployment')
+    return false
+  }
+
   if (atlasUri) {
     try {
       await mongoose.connect(atlasUri, { dbName: 'CMotors' })
