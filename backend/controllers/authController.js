@@ -2,6 +2,13 @@ import User from '../models/User.js'
 import { generateToken } from '../utils/jwt.js'
 import { sendSuccess, sendError } from '../utils/response.js'
 
+const isDatabaseUnavailableError = (error) => {
+  return error?.name === 'MongooseServerSelectionError' ||
+    error?.name === 'MongoNotConnectedError' ||
+    error?.message?.includes('ECONNREFUSED') ||
+    error?.message?.includes('connect ECONNREFUSED')
+}
+
 // Register user
 export const signup = async (req, res) => {
   try {
@@ -61,7 +68,16 @@ export const login = async (req, res) => {
     }
 
     // Find user and select password
-    const user = await User.findOne({ email }).select('+password')
+    let user
+    try {
+      user = await User.findOne({ email }).select('+password')
+    } catch (error) {
+      if (isDatabaseUnavailableError(error)) {
+        return sendError(res, 'Authentication service is temporarily unavailable', 503)
+      }
+      throw error
+    }
+
     if (!user) {
       return sendError(res, 'Invalid credentials', 401)
     }
