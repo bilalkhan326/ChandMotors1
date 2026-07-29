@@ -10,24 +10,40 @@ import logger from './utils/logger.js'
 // Initialize express app
 const app = express()
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+// Load environment variables from the backend folder's .env
+dotenv.config({ path: path.join(__dirname, '.env') })
+
 // CORS configuration
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:3000',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:3000',
   process.env.CORS_ORIGIN
 ].filter(Boolean)
 
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true
+
+  if (allowedOrigins.includes(origin)) return true
+
+  return /https:\/\/.*\.vercel\.app$/i.test(origin) || /https:\/\/.*\.vercel\.app:\d+$/i.test(origin)
+}
+
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (isAllowedOrigin(origin)) {
       callback(null, true)
     } else {
-      callback(new Error('Not allowed by CORS'), false)
+      callback(null, true)
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
@@ -36,17 +52,15 @@ app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ limit: '10mb', extended: true }))
 
 // Serve static files from uploads directory
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-// Load environment variables from the backend folder's .env
-dotenv.config({ path: path.join(__dirname, '.env') })
-
 // Serve uploaded files from backend/uploads so uploaded images are reachable
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // MongoDB Connection helper
 export const connectDatabase = async () => {
+  if (mongoose.connection.readyState === 1) {
+    return true
+  }
+
   const atlasUri = process.env.MONGODB_URI
   const localUri = process.env.FALLBACK_MONGODB_URI || 'mongodb://127.0.0.1:27017/chand-motors'
 
@@ -54,7 +68,7 @@ export const connectDatabase = async () => {
     try {
       await mongoose.connect(atlasUri, { dbName: 'CMotors' })
       logger.info('✓ MongoDB Atlas connected')
-      return
+      return true
     } catch (atlasError) {
       logger.warn('Atlas connection failed, attempting local fallback', {
         error: atlasError.message,
@@ -64,13 +78,13 @@ export const connectDatabase = async () => {
       try {
         await mongoose.connect(localUri)
         logger.info('✓ Local MongoDB connected', { uri: localUri })
-        return
+        return true
       } catch (localError) {
         logger.error('✗ MongoDB connection error', {
           atlasError: atlasError.message,
           localError: localError.message
         })
-        process.exit(1)
+        return false
       }
     }
   }
@@ -82,11 +96,12 @@ export const connectDatabase = async () => {
   try {
     await mongoose.connect(localUri)
     logger.info('✓ Local MongoDB connected', { uri: localUri })
+    return true
   } catch (localError) {
     logger.error('✗ Local MongoDB connection error', {
       localError: localError.message
     })
-    process.exit(1)
+    return false
   }
 }
 

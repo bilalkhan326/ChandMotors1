@@ -1,6 +1,13 @@
 import Settings from '../models/Settings.js'
 import { sendSuccess, sendError } from '../utils/response.js'
 
+const isDatabaseUnavailableError = (error) => {
+  return error?.name === 'MongooseServerSelectionError' ||
+    error?.name === 'MongoNotConnectedError' ||
+    error?.message?.includes('ECONNREFUSED') ||
+    error?.message?.includes('connect ECONNREFUSED')
+}
+
 // Get settings (single document)
 export const getSettings = async (req, res) => {
   try {
@@ -11,6 +18,9 @@ export const getSettings = async (req, res) => {
     sendSuccess(res, { settings }, 'Settings fetched')
   } catch (error) {
     console.error('Get settings error:', error)
+    if (isDatabaseUnavailableError(error)) {
+      return sendSuccess(res, { settings: {} }, 'Settings fetched')
+    }
     sendError(res, error.message, 500)
   }
 }

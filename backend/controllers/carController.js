@@ -1,6 +1,13 @@
 import Car from '../models/Car.js'
 import { sendSuccess, sendError } from '../utils/response.js'
 
+const isDatabaseUnavailableError = (error) => {
+  return error?.name === 'MongooseServerSelectionError' ||
+    error?.name === 'MongoNotConnectedError' ||
+    error?.message?.includes('ECONNREFUSED') ||
+    error?.message?.includes('connect ECONNREFUSED')
+}
+
 // Get all cars
 export const getAllCars = async (req, res) => {
   try {
@@ -36,6 +43,14 @@ export const getAllCars = async (req, res) => {
     }, 'Cars fetched successfully')
   } catch (error) {
     console.error('Get cars error:', error)
+    if (isDatabaseUnavailableError(error)) {
+      return sendSuccess(res, {
+        cars: [],
+        total: 0,
+        limit: parseInt(req.query.limit || 10),
+        skip: parseInt(req.query.skip || 0)
+      }, 'Cars fetched successfully')
+    }
     sendError(res, error.message, 500)
   }
 }
