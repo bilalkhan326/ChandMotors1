@@ -85,7 +85,7 @@ const Home = () => {
         }}
       />
       {/* Hero Section */}
-      <section className="w-full min-h-screen flex items-center justify-center relative overflow-hidden pt-20 pb-12 sm:pb-20">
+      <section className="w-full min-h-screen flex items-center justify-center relative overflow-hidden pt-24 pb-12 sm:pt-28 sm:pb-20">
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">

@@ -24,6 +24,10 @@ body {
   padding: 0;
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 #root, #root > div {
   width: 100%;
   min-width: 100%;
